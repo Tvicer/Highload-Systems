@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  lab1-postgres:
+    image: postgres:latest
+    container_name: lab1-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
