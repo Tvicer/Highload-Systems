@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  lab2-postgres:
+    image: postgres:latest
+    container_name: lab2-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  lab2-clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: lab2-clickhouse
+    environment:
+      - CLICKHOUSE_PASSWORD=default
+    ports:
+      - "9000:9000"
+      - "8123:8123"
+
+  lab2-spark:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lab2-spark
+    depends_on:
+      - lab2-postgres
+      - lab2-clickhouse
+    environment:
+      - SPARK_MASTER=local[*]
+    volumes:
+      - ./spark:/app/spark:ro
+      - ./data:/app/data:ro
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    ports:
+      - "4040:4040"
+
